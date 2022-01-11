@@ -4,14 +4,20 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
+from settings import creds
+from settings import daylist
 
 browser = webdriver.Chrome()
-username = ''
-password = ''
 
-
-def Navigating(wait): # Login to Mainestreet and navigate to the class search page, wait is time in seconds to give the form to load properly
-    # Login to UMS portal
+# Login to Mainestreet and navigate to the class search page, wait is time in seconds to give the form to load properly
+def Navigating(wait):
+    # Load data from settings.py for login
+    for data in creds:
+        if data == 'username':
+            username = creds[data]
+        else:
+            password = creds[data]
+    # Login to UMS portal from the creds in settings
     browser.get('https://umaine.edu/portal/')
     inputSearch = browser.find_element(By.XPATH, '//*[@id="content"]/div/div[3]/div/p[1]/a/span')
     inputSearch.click()
@@ -39,13 +45,29 @@ def Navigating(wait): # Login to Mainestreet and navigate to the class search pa
     browser.find_element(By.XPATH, '//*[@id="CLASS_SRCH_WRK2_INSTITUTION$31$"]/option[3]').click()
     sleep(1)
 
-    # Check off the days
-    monCheck = browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_MON$5"]').click()
-    #wedCheck = browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_WED$5"]').click()
-    #friCheck = browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_FRI$5"]').click()
 
-    #tueCheck = browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_TUES$5"]').click()
-    #thuCheck = browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_THURS$5"]').click()
+    # Check off the days to click from settings
+    for day in daylist:
+        if day == 'monday':
+            if daylist[day] == 'yes':
+                browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_MON$5"]').click()
+                print(daylist[day])
+        if day == 'tuesday':
+            if daylist[day] == 'yes':
+                print(daylist[day])
+                browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_TUES$5"]').click()
+        if day == 'wednesday':
+            if daylist[day] == 'yes':
+                print(daylist[day])
+                browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_WED$5"]').click()
+        if day == 'thursday':
+            if daylist[day] == 'yes':
+                print(daylist[day])
+                browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_THURS$5"]').click()
+        if day == 'friday':
+            if daylist[day] == 'yes':
+                print(daylist[day])
+                browser.find_element(By.XPATH, '//*[@id="SSR_CLSRCH_WRK_FRI$5"]').click()
 
     # Search
     browser.find_element(By.XPATH, '//*[@id="CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH"]').click()
@@ -106,6 +128,9 @@ def NewScrape():
             print('No Such element - ' + str(classnum))
             return
 
-Navigating(70)
-#Scraping()
-NewScrape()
+
+
+        
+
+Navigating(90)
+browser.close()
